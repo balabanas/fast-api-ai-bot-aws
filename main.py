@@ -7,11 +7,14 @@ from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from openai import InvalidRequestError
+from mangum import Mangum
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 openai.api_key = OPENAI_API_KEY
 app = FastAPI()
+handler = Mangum(app)
+
 templates = Jinja2Templates(directory='templates')
 chat_log: list = [{
     'role': 'system',
