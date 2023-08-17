@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Annotated
 
@@ -24,6 +25,8 @@ chat_log: list = [{
 chat_responses: list = []
 image_url: str = ''
 
+logging.basicConfig(level=logging.WARNING)
+
 
 @app.get('/', response_class=HTMLResponse)
 async def chat_page(request: Request):
@@ -34,14 +37,17 @@ async def chat_page(request: Request):
 async def chat_response(request: Request, user_chat_input: Annotated[str, Form()]):
     chat_log.append({'role': 'user', 'content': user_chat_input})
     chat_responses.append(user_chat_input)
-    response = openai.ChatCompletion.create(
-        model='gpt-3.5-turbo',
-        messages=chat_log,
-        temperature=0.6
-    )
-    bot_response = response['choices'][0]['message']['content']
-    chat_log.append({'role': 'assistant', 'content': bot_response})
-    chat_responses.append(bot_response)
+    try:
+        response = openai.ChatCompletion.create(
+            model='gpt-3.5-turbo',
+            messages=chat_log,
+            temperature=0.6
+        )
+        bot_response = response['choices'][0]['message']['content']
+        chat_log.append({'role': 'assistant', 'content': bot_response})
+        chat_responses.append(bot_response)
+    except InvalidRequestError as e:
+        logging.error(str(e))
     return templates.TemplateResponse('home.html', {'request': request, 'chat_responses': chat_responses[::-1]})
 
 
@@ -63,5 +69,6 @@ async def image_response(request: Request, user_image_input: Annotated[str, Form
         msg = ''
     except InvalidRequestError as e:
         msg = str(e)
+        logging.error(msg)
     return templates.TemplateResponse('image.html', {'request': request, 'image_url': image_url,
                                                      'user_image_input': user_image_input, 'msg': msg})
