@@ -1,0 +1,23 @@
+{% include 'layout.html' %}
+<div class="container mt-5">
+    <h3>
+        Chat with me
+    </h3>
+    <form class="mb-3" action="/" method="post">
+        <textarea class="form-control" id="user_chat_input" name="user_chat_input" rows="4"></textarea>
+        <button class="btn btn-primary mt-1" type="submit">Send</button>
+    </form>
+
+    {% set cycling_list = cycler('Bot', 'You') %}
+    <div>{% for response in chat_responses %}
+        <div class="card met-3">
+            <div class="card-header">
+                {{ cycling_list.next() }}
+            </div>
+            <div class="card-body">
+                <div>{{ response }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

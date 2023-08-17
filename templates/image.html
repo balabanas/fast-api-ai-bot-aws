@@ -1,0 +1,35 @@
+{% include 'layout.html' %}
+<div class="container mt-5">
+    <h3>
+        Describe me, what should I draw for you today
+    </h3>
+    <form class="mb-3" action="/image" method="post">
+        <textarea class="form-control {% if msg %}is-invalid{%endif%}" id="user_image_input" name="user_image_input" rows="4"></textarea>
+        <div id="validationFeedback" class="invalid-feedback">{{ msg }}</div>
+
+        <button class="btn btn-primary mt-1" type="submit">Send</button>
+    </form>
+
+    {% if image_url %}
+    <div class="card-group">
+        <div class="card text-center met-3">
+            <div class="card-header">
+                Your prompt
+            </div>
+            <div class="card-body">
+                <p>{{ user_image_input }}</p>
+            </div>
+        </div>
+
+        <div class="card text-center met-3">
+            <div class="card-header">
+                Image generated
+            </div>
+            <div class="card-body">
+                <img src="{{ image_url }}" alt="Generated Image"/>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
