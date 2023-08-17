@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from openai import InvalidRequestError
 from mangum import Mangum
+from openai import InvalidRequestError
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
